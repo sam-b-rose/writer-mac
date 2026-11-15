@@ -1,0 +1,3 @@
+:root { --font: -apple-system, "Helvetica Neue", Helvetica, sans-serif; --leading: 1.6; --measure: 36em; --scale: 1.2; }
+h1, h2, h3 { line-height: 1.25; }
+h3, h4, h5, h6 { margin-bottom: 0.4em; }

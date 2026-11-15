@@ -1,0 +1,28 @@
+:root {
+  --font: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --leading: 1.5;
+  --measure: 46em;
+  --size: 16px;
+  --gap: 1em;
+  --rule: light-dark(#d1d9e0, #3d444d);
+  --bg: light-dark(#ffffff, #0d1117);
+  --text: light-dark(#1f2328, #f0f6fc);
+}
+h1, h2, h3, h4, h5, h6 { margin: 1.5em 0 1em; font-weight: 600; line-height: 1.25; }
+h1 { font-size: 2em; padding-bottom: 0.3em; border-bottom: 1px solid var(--rule); }
+h2 { font-size: 1.5em; padding-bottom: 0.3em; border-bottom: 1px solid var(--rule); }
+h3 { font-size: 1.25em; }
+h5 { font-size: 0.875em; }
+h6 { font-size: 0.85em; color: var(--muted); }
+:is(h1, h2) + :is(h1, h2) { margin-top: 1.5em; }
+ul { list-style: disc; padding-left: 2em; }
+ul > li::before { content: none; }
+li:has(> input[type="checkbox"]), nav.toc ul { list-style: none; }
+a { color: light-dark(#0969da, #4493f8); text-decoration: none; }
+blockquote:not(.callout) { color: var(--muted); }
+blockquote::before { border-left-width: 0.25em; }
+table { width: auto; font-size: 1em; }
+th, td { border: 1px solid var(--rule); padding: 6px 13px; }
+thead th { border-bottom-width: 1px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 85%; padding: 0.2em 0.4em; border-radius: 6px; }
+pre { border-radius: 6px; padding: 16px; }
