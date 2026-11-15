@@ -337,10 +337,12 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
         onChange?()
     }
 
+    func isCode(_ range: NSRange) -> Bool {
+        codeRanges.contains { NSIntersectionRange($0, range).length > 0 }
+    }
+
     func textView(_ view: NSTextView, didCheckTextIn range: NSRange, types checkingTypes: NSTextCheckingTypes, options: [NSSpellChecker.OptionKey: Any] = [:], results: [NSTextCheckingResult], orthography: NSOrthography, wordCount: Int) -> [NSTextCheckingResult] {
-        results.filter { result in
-            result.resultType != .spelling || !codeRanges.contains { NSIntersectionRange($0, result.range).length > 0 }
-        }
+        results.filter { ![.spelling, .grammar, .correction].contains($0.resultType) || !isCode($0.range) }
     }
 
     func textViewDidChangeSelection(_ notification: Notification) {

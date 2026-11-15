@@ -402,6 +402,11 @@ final class EditorTextView: NSTextView {
         inlinePredictionType = settings.inlinePrediction ? .default : .no
     }
 
+    override func setSpellingState(_ value: Int, range charRange: NSRange) {
+        if value != 0, editor?.isCode(charRange) == true { return }
+        super.setSpellingState(value, range: charRange)
+    }
+
     override func toggleContinuousSpellChecking(_ sender: Any?) { Settings.shared.checkSpelling.toggle() }
     override func toggleGrammarChecking(_ sender: Any?) { Settings.shared.checkGrammar.toggle() }
     override func toggleAutomaticSpellingCorrection(_ sender: Any?) { Settings.shared.correctSpelling.toggle() }
