@@ -97,6 +97,11 @@ final class Settings {
         set { write("showPreview", newValue) }
     }
 
+    var showFormatBar: Bool {
+        get { read("showFormatBar", true) }
+        set { write("showFormatBar", newValue) }
+    }
+
     var fullPreview: Bool {
         get { read("fullPreview", false) }
         set { write("fullPreview", newValue) }

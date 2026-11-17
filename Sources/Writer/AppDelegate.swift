@@ -148,6 +148,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
 
     @objc func toggleLibrary(_ sender: Any?) { Settings.shared.showLibrary.toggle() }
     @objc func togglePreview(_ sender: Any?) { Settings.shared.showPreview.toggle() }
+    @objc func toggleFormatBar(_ sender: Any?) { Settings.shared.showFormatBar.toggle() }
 
     @objc func setPreviewLayout(_ sender: NSMenuItem) {
         Settings.shared.fullPreview = sender.representedObject as? String == "full"
@@ -231,6 +232,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         switch menuItem.action {
         case #selector(toggleLibrary(_:)): on = settings.showLibrary
         case #selector(togglePreview(_:)): on = settings.showPreview
+        case #selector(toggleFormatBar(_:)): on = settings.showFormatBar
         case #selector(setPreviewLayout(_:)): on = settings.fullPreview == (value == "full")
         case #selector(toggleFocus(_:)): on = settings.focus
         case #selector(toggleTypewriter(_:)): on = settings.typewriter

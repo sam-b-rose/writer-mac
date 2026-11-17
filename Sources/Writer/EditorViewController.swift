@@ -139,6 +139,7 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
         statsButton.refusesFirstResponder = true
 
         root.addSubview(scrollView)
+        formatBar.isHidden = !Settings.shared.showFormatBar
         root.addSubview(formatBar)
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: root.leadingAnchor),
@@ -385,6 +386,7 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
             }
             centerCaret(animated: true)
         case "stat": updateStats()
+        case "showFormatBar": formatBar.isHidden = !Settings.shared.showFormatBar
         default: refreshOverlays()
         }
     }
@@ -448,9 +450,20 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
         let target = NSPoint(x: 0, y: min(max(y, 0), limit))
         let distance = abs(target.y - clip.bounds.origin.y)
         if distance < 0.5 { return }
-        if animated {
+        let duration = min(max(0.12 * sqrt(distance / 30), 0.12), 0.3)
+        if animated, distance < caretLine.height * 3, let layer = textView.layer {
+            let offset = target.y - clip.bounds.origin.y
+            clip.setBoundsOrigin(target)
+            let slide = CABasicAnimation(keyPath: "position")
+            slide.isAdditive = true
+            slide.fromValue = NSValue(point: NSPoint(x: 0, y: offset))
+            slide.toValue = NSValue(point: .zero)
+            slide.duration = duration
+            slide.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            layer.add(slide, forKey: nil)
+        } else if animated {
             NSAnimationContext.runAnimationGroup { context in
-                context.duration = min(max(0.12 * sqrt(distance / 30), 0.12), 0.3)
+                context.duration = duration
                 clip.animator().setBoundsOrigin(target)
             }
         } else {

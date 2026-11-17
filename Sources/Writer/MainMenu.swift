@@ -194,6 +194,7 @@ enum MainMenu {
                 item("Split", #selector(AppDelegate.setPreviewLayout(_:)), value: "split"),
                 item("Full", #selector(AppDelegate.setPreviewLayout(_:)), value: "full"),
             ]),
+            item("Show Formatting Bar", #selector(AppDelegate.toggleFormatBar(_:))),
             separator,
             item("Focus Mode", #selector(AppDelegate.toggleFocus(_:)), "d"),
             submenu("Focus", [
