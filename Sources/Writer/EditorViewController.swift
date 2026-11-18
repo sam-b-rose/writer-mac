@@ -65,6 +65,7 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
     let statsButton = NSButton(title: "", target: nil, action: nil)
     private(set) lazy var formatBar = makeFormatBar()
     let caret = CaretView()
+    var overlayRange = NSRange()
 
     var documentURL: URL?
     var onChange: (() -> Void)?
@@ -321,13 +322,15 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
         let origin = textView.textContainerOrigin
         let width = max(3, (font.pointSize / 6).rounded())
         let overshoot = (font.pointSize * 0.22).rounded()
-        caret.frame = NSRect(
+        let frame = NSRect(
             x: (origin.x + x - width / 2).rounded(),
             y: origin.y + line.minY - overshoot,
             width: width,
             height: ceil(font.ascender - font.descender) + overshoot * 2)
+        let moved = caret.isHidden || caret.frame != frame
+        caret.frame = frame
         caret.isHidden = false
-        caret.blink()
+        if moved { caret.blink() }
     }
 
     func textDidChange(_ notification: Notification) {
@@ -362,7 +365,8 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
     }
 
     @objc func scrolled() {
-        if !Settings.shared.syntax.isEmpty || !checker.isEmpty { scheduleOverlays() }
+        guard !Settings.shared.syntax.isEmpty || !checker.isEmpty, visibleCharacterRange != overlayRange else { return }
+        scheduleOverlays()
     }
 
     @objc func settingsChanged(_ notification: Notification) {
@@ -491,6 +495,7 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
 
     func refreshOverlays() {
         guard isViewLoaded, let layout = textView.layoutManager else { return }
+        overlayRange = visibleCharacterRange
         let text = storage.string as NSString
         let full = NSRange(location: 0, length: text.length)
         let keys: [NSAttributedString.Key] = [.foregroundColor, .strikethroughStyle, .strikethroughColor]
