@@ -39,4 +39,4 @@ sed -e "s/@VERSION@/$VERSION/g" -e "s/@SHA256@/$SHA/g" -e "s#@REPO@#$REPO#g" Scr
 echo "Release artifacts in $OUT"
 echo "  $ZIP  sha256 $SHA"
 echo "Publish: gh release create $TAG $OUT/$ZIP $OUT/appcast.xml --repo $REPO --title $TAG --generate-notes"
-echo "Cask: copy $OUT/writer.rb to Casks/writer.rb in your homebrew tap"
+echo "Cask: copy $OUT/writer.rb to Casks/writer.rb and commit it"
