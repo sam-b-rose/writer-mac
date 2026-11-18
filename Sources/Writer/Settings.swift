@@ -209,7 +209,7 @@ final class Settings {
     }
 
     var smartQuotes: Bool {
-        get { read("smartQuotes", false) }
+        get { read("smartQuotes", true) }
         set { write("smartQuotes", newValue) }
     }
 

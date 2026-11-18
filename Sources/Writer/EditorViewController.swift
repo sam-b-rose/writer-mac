@@ -346,7 +346,7 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
     }
 
     func textView(_ view: NSTextView, didCheckTextIn range: NSRange, types checkingTypes: NSTextCheckingTypes, options: [NSSpellChecker.OptionKey: Any] = [:], results: [NSTextCheckingResult], orthography: NSOrthography, wordCount: Int) -> [NSTextCheckingResult] {
-        results.filter { ![.spelling, .grammar, .correction].contains($0.resultType) || !isCode($0.range) }
+        results.filter { ![.spelling, .grammar, .correction, .quote].contains($0.resultType) || !isCode($0.range) }
     }
 
     func textViewDidChangeSelection(_ notification: Notification) {
