@@ -1,4 +1,5 @@
 import AppKit
+import Sparkle
 import UniformTypeIdentifiers
 import WriterCore
 
@@ -6,6 +7,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
     var controllers: [WindowController] = []
     private var pendingURLs: [URL] = []
     private var launched = false
+    private lazy var updater: SPUStandardUpdaterController? = {
+        guard argument("--snapshot") == nil,
+              let key = Bundle.main.object(forInfoDictionaryKey: "SUPublicEDKey") as? String, !key.isEmpty else { return nil }
+        return SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+    }()
 
     var activeController: WindowController? {
         (NSApp.keyWindow?.windowController ?? NSApp.mainWindow?.windowController) as? WindowController ?? controllers.last
@@ -26,6 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         if let library = argument("--library") { Settings.shared.store.set(library, forKey: "libraryPath") }
         Theme.registerFonts()
         Theme.applyAppearance()
+        _ = updater
         NSApp.mainMenu = MainMenu.build(delegate: self)
         NotificationCenter.default.addObserver(self, selector: #selector(settingsChanged(_:)), name: Settings.changed, object: nil)
 
@@ -142,6 +149,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         activeController?.open(url)
     }
 
+    @objc func checkForUpdates(_ sender: Any?) { updater?.checkForUpdates(sender) }
+
     @objc func showSettings(_ sender: Any?) { SettingsWindowController.shared.showWindow(nil) }
 
     @objc func showShortcuts(_ sender: Any?) { ShortcutsPanel.shared.toggle(over: activeController?.window) }
@@ -249,6 +258,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         case #selector(chooseAppearance(_:)): on = settings.appearance == value
         case #selector(setTemplate(_:)): on = settings.template == value
         case #selector(setSort(_:)): on = settings.sort.rawValue == value
+        case #selector(checkForUpdates(_:)): return updater?.updater.canCheckForUpdates ?? false
         default: break
         }
         if let on { menuItem.state = on ? .on : .off }

@@ -37,6 +37,7 @@ enum MainMenu {
 
         main.addItem(submenu("Writer", [
             item("About Writer", #selector(NSApplication.orderFrontStandardAboutPanel(_:))),
+            item("Check for Updates…", #selector(AppDelegate.checkForUpdates(_:))),
             separator,
             item("Settings…", #selector(AppDelegate.showSettings(_:)), ","),
             separator,

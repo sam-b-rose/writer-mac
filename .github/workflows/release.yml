@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    env:
+      DEVELOPER_ID: ${{ secrets.DEVELOPER_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import signing certificate
+        if: env.DEVELOPER_ID != ''
+        env:
+          CERTIFICATE_P12: ${{ secrets.CERTIFICATE_P12 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          NOTARY_APPLE_ID: ${{ secrets.NOTARY_APPLE_ID }}
+          NOTARY_TEAM_ID: ${{ secrets.NOTARY_TEAM_ID }}
+          NOTARY_PASSWORD: ${{ secrets.NOTARY_PASSWORD }}
+        run: |
+          echo "$CERTIFICATE_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p ci "$RUNNER_TEMP/ci.keychain"
+          security default-keychain -s "$RUNNER_TEMP/ci.keychain"
+          security unlock-keychain -p ci "$RUNNER_TEMP/ci.keychain"
+          security import "$RUNNER_TEMP/cert.p12" -k "$RUNNER_TEMP/ci.keychain" -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k ci "$RUNNER_TEMP/ci.keychain"
+          xcrun notarytool store-credentials ci --apple-id "$NOTARY_APPLE_ID" --team-id "$NOTARY_TEAM_ID" --password "$NOTARY_PASSWORD"
+      - name: Build release
+        env:
+          NOTARY_PROFILE: ci
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: Scripts/release.sh "${GITHUB_REF_NAME#v}"
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" build/release/Writer-*.zip build/release/appcast.xml --title "$GITHUB_REF_NAME" --generate-notes
