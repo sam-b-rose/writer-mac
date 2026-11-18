@@ -1,6 +1,6 @@
 # Writer for macOS
 
-A native AppKit Markdown writing app modeled on iA Writer. The browser version lives separately in `../writer-clone`.
+A native AppKit Markdown writing app modeled on iA Writer. The browser version lives in [writer-web](https://github.com/sam-b-rose/writer-web).
 
 ```sh
 ./build.sh                      # builds build/Writer.app
