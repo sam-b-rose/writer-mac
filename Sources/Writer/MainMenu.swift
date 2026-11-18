@@ -73,9 +73,10 @@ enum MainMenu {
                 item("PDF…", #selector(WindowController.exportPDF(_:))),
                 item("Microsoft Word…", #selector(WindowController.exportWord(_:))),
                 item("Markdown…", #selector(WindowController.exportMarkdown(_:))),
+                separator,
+                item("Copy HTML", #selector(WindowController.copyHTML(_:)), "c", option),
+                item("Copy Formatted", #selector(WindowController.copyFormatted(_:)), "c", shift),
             ]),
-            item("Copy HTML", #selector(WindowController.copyHTML(_:)), "c", option),
-            item("Copy Formatted", #selector(WindowController.copyFormatted(_:)), "c", shift),
             separator,
             item("Print…", #selector(WindowController.printDocument(_:)), "p"),
             item("Print Plain Text…", #selector(WindowController.printPlainText(_:)), "p", option),
@@ -92,12 +93,6 @@ enum MainMenu {
                 item("AI", #selector(EditorTextView.pasteAs(_:)), "v", shift, value: Author.ai),
                 item("Reference", #selector(EditorTextView.pasteAs(_:)), "v", option, value: Author.reference),
                 item("Other Author…", #selector(EditorTextView.pasteAsOtherAuthor(_:))),
-            ]),
-            submenu("Mark As", [
-                item("Human", #selector(EditorTextView.markAs(_:))),
-                item("AI", #selector(EditorTextView.markAs(_:)), value: Author.ai),
-                item("Reference", #selector(EditorTextView.markAs(_:)), value: Author.reference),
-                item("Other Author…", #selector(EditorTextView.markAsOtherAuthor(_:))),
             ]),
             item("Select All", #selector(NSText.selectAll(_:)), "a"),
             separator,
@@ -165,38 +160,32 @@ enum MainMenu {
                 item($0, #selector(EditorTextView.addCallout(_:)), value: $0.uppercased())
             }),
             separator,
-            item("Add Link", #selector(EditorTextView.addLink(_:)), "k"),
-            item("Add Wikilink", #selector(EditorTextView.addWikilink(_:)), "k", shift),
-            item("Add Image", #selector(EditorTextView.addImage(_:)), "k", option),
-            item("Add Footnote", #selector(EditorTextView.addFootnote(_:)), "f", control),
-            item("Add Hashtag", #selector(EditorTextView.addHashtag(_:))),
-            item("Add Date", #selector(EditorTextView.addDate(_:)), "d", shift),
-            separator,
-            item("Add Table", #selector(EditorTextView.addTable(_:)), "t", control),
             submenu("Table", tableItems.map { title, operation in
                 title == "-" ? separator : item(title, #selector(EditorTextView.tableAction(_:)), value: operation)
             }),
+        ]))
+
+        main.addItem(submenu("Insert", [
+            item("Link", #selector(EditorTextView.addLink(_:)), "k"),
+            item("Wikilink", #selector(EditorTextView.addWikilink(_:)), "k", shift),
+            item("Image", #selector(EditorTextView.addImage(_:)), "k", option),
+            item("Footnote", #selector(EditorTextView.addFootnote(_:)), "n", control),
+            item("Hashtag", #selector(EditorTextView.addHashtag(_:))),
+            item("Date", #selector(EditorTextView.addDate(_:)), "d", shift),
+            separator,
+            item("Table", #selector(EditorTextView.addTable(_:)), "t", control),
             submenu("Math", [
                 item("Inline Math", #selector(EditorTextView.toggleInlineMath(_:)), "m", control),
                 item("Display Math", #selector(EditorTextView.addDisplayMath(_:))),
             ]),
-            item("Add Table of Contents", #selector(EditorTextView.addTableOfContents(_:))),
-            item("Add Content Block…", #selector(EditorTextView.addContentBlock(_:))),
-            item("Add Page Break", #selector(EditorTextView.addPageBreak(_:)), "\r", shift),
-            item("Add Horizontal Rule", #selector(EditorTextView.addHorizontalRule(_:))),
+            item("Horizontal Rule", #selector(EditorTextView.addHorizontalRule(_:))),
+            item("Page Break", #selector(EditorTextView.addPageBreak(_:)), "\r", shift),
+            separator,
+            item("Table of Contents", #selector(EditorTextView.addTableOfContents(_:))),
+            item("Content Block…", #selector(EditorTextView.addContentBlock(_:))),
         ]))
 
-        let templates = submenu("Template", [])
-        templates.submenu?.delegate = delegate
-        main.addItem(submenu("View", [
-            item("Show Library", #selector(AppDelegate.toggleLibrary(_:)), "l", shift),
-            item("Show Preview", #selector(AppDelegate.togglePreview(_:)), "r"),
-            submenu("Preview Layout", [
-                item("Split", #selector(AppDelegate.setPreviewLayout(_:)), value: "split"),
-                item("Full", #selector(AppDelegate.setPreviewLayout(_:)), value: "full"),
-            ]),
-            item("Show Formatting Bar", #selector(AppDelegate.toggleFormatBar(_:))),
-            separator,
+        main.addItem(submenu("Writing", [
             item("Focus Mode", #selector(AppDelegate.toggleFocus(_:)), "d"),
             submenu("Focus", [
                 item("Sentence", #selector(AppDelegate.setFocusScope(_:)), value: "sentence"),
@@ -215,7 +204,27 @@ enum MainMenu {
                 + StyleCategory.allCases.map { item($0.title, #selector(AppDelegate.toggleStyle(_:)), value: $0.rawValue) }
                 + [separator, item("Edit Custom Patterns…", #selector(AppDelegate.editCustomPatterns(_:)))]),
             item("Show Authors", #selector(AppDelegate.toggleAuthors(_:))),
+            separator,
+            submenu("Mark As", [
+                item("Human", #selector(EditorTextView.markAs(_:))),
+                item("AI", #selector(EditorTextView.markAs(_:)), value: Author.ai),
+                item("Reference", #selector(EditorTextView.markAs(_:)), value: Author.reference),
+                item("Other Author…", #selector(EditorTextView.markAsOtherAuthor(_:))),
+            ]),
             submenu("Stats", StatKind.allCases.map { item($0.title, #selector(AppDelegate.setStat(_:)), value: $0.rawValue) }),
+        ]))
+
+        let templates = submenu("Template", [])
+        templates.submenu?.delegate = delegate
+        main.addItem(submenu("View", [
+            item("Show Library", #selector(AppDelegate.toggleLibrary(_:)), "l", shift),
+            item("Show Preview", #selector(AppDelegate.togglePreview(_:)), "r"),
+            submenu("Preview Layout", [
+                item("Split", #selector(AppDelegate.setPreviewLayout(_:)), value: "split"),
+                item("Full", #selector(AppDelegate.setPreviewLayout(_:)), value: "full"),
+            ]),
+            item("Show Formatting Bar", #selector(AppDelegate.toggleFormatBar(_:))),
+            submenu("Sort Files By", LibrarySort.allCases.map { item($0.title, #selector(AppDelegate.setSort(_:)), value: $0.rawValue) }),
             separator,
             submenu("Font", [("Mono", "mono"), ("Duo", "duo"), ("Quattro", "quattro")].map {
                 item($0.0, #selector(AppDelegate.chooseFont(_:)), value: $0.1)
@@ -232,7 +241,6 @@ enum MainMenu {
             templates,
             item("Single Return Starts a New Paragraph", #selector(AppDelegate.toggleHardBreaks(_:))),
             item("Smart Punctuation in Preview", #selector(AppDelegate.toggleSmartPunctuation(_:))),
-            submenu("Sort Files By", LibrarySort.allCases.map { item($0.title, #selector(AppDelegate.setSort(_:)), value: $0.rawValue) }),
             separator,
             item("Enter Full Screen", #selector(NSWindow.toggleFullScreen(_:)), "f", control),
         ]))
