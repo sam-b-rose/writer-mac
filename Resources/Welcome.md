@@ -1,6 +1,6 @@
 # Welcome
 
-This is a plain text editor. There are no fonts to pick, no margins to drag and no toolbar to configure. You write, and the editor gets out of your way. #welcome
+This is a plain text editor. You can't pick a font, drag a margin or configure a toolbar, because none of those exist. You write and the editor stays out of the way. #welcome
 
 {{TOC}}
 
@@ -18,7 +18,7 @@ Style Check marks fillers, clichés and redundancies. It is actually very useful
 
 ## Authors
 
-Text pasted with **⇧⌘V** is marked as written by AI and shown in color. Characters you type into it become yours. Authorship is saved at the end of the file, so it travels with the document.
+Paste with **⇧⌘V** and Writer marks the text as written by AI and colors it. Characters you type into it become yours. Authorship is saved at the end of the file, so it travels with the document.
 
 ## Markdown
 
@@ -37,7 +37,7 @@ Text pasted with **⇧⌘V** is marked as written by AI and shown in color. Char
 
 Press Tab inside a table to move between cells. The *Format ▸ Table* menu adds, moves, sorts and aligns rows and columns.
 
-Math is written in TeX: $e^{i\pi} + 1 = 0$, or as a block:
+Write math in TeX: $e^{i\pi} + 1 = 0$, or as a block:
 
 $$
 \int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}

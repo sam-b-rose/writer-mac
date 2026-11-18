@@ -2,8 +2,8 @@
 
 <p align="center">
   <b>A Markdown editor that gets out of your way.</b><br>
-  No font picker. No margins to drag. No toolbar to configure.<br>
-  Just you, a blinking caret, and a suspicious number of adverbs.
+  There's no font picker, no draggable margin and no toolbar to configure,<br>
+  so the only thing left to do is write. It'll flag the "very"s you let slip through.
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
   <img src="docs/editor.png" alt="Writer's editor with the library, outline and hashtag sidebar" width="860">
 </p>
 
-Writer is a native AppKit take on iA Writer: plain text in, calm typography out. It's fast, it's small, and it never asks you to sign in. The browser version lives in [writer-web](https://github.com/sam-b-rose/writer-web).
+Writer is a native AppKit take on iA Writer: plain text in, calm typography out. It reads and writes ordinary Markdown files in a folder you choose, so your notes outlive the app. The browser version lives in [writer-web](https://github.com/sam-b-rose/writer-web).
 
 ## Install
 
@@ -26,7 +26,7 @@ brew tap sam-b-rose/writer-mac https://github.com/sam-b-rose/writer-mac
 brew install --cask sam-b-rose/writer-mac/writer
 ```
 
-Or build it yourself. All you need is the Xcode Command Line Tools (no Xcode, no drama):
+Or build it yourself; the Xcode Command Line Tools are enough, and full Xcode isn't required:
 
 ```sh
 ./build.sh && open build/Writer.app
@@ -38,21 +38,21 @@ The first launch creates `~/Documents/Writer` with a welcome document. Pick anot
 
 ### Focus Mode (⌘D)
 
-Everything except the sentence you're writing fades out. Your inner editor can wait its turn. Widen the scope to a paragraph in *View ▸ Focus*, and pin the active line to the middle of the window with Typewriter Mode (⌥⌘T).
+Everything except the sentence you're writing fades out, so the urge to reread the last paragraph has nothing to grab onto. Widen the scope to a paragraph in *View ▸ Focus*; Typewriter Mode (⌥⌘T) pins the active line to the middle of the window.
 
 <p align="center"><img src="docs/focus.png" alt="Focus Mode dimming everything but the current sentence" width="760"></p>
 
 ### Syntax highlighting for your prose
 
-Parts of speech get their own colors, so you can see at a glance that you wrote nine adjectives in a row. Style Check then strikes through fillers, clichés and redundancies, like "at the end of the day" and "basically". It's rude, and it's right.
+Parts of speech get their own colors, which makes a run of adverbs or a pile of nouns easy to spot. Style Check strikes through fillers, clichés and redundancies; in the screenshot it caught "actually", "basically" and "added bonus". It's rude, and it's right.
 
-Paste with ⇧⌘V and the text is marked as AI-written and shown in color. Anything you type into it becomes yours. Authorship is saved in the file itself, so it travels with the document.
+Paste with ⇧⌘V and Writer marks the text as AI-written and colors it. Characters you type into it become yours. The authorship lives in the file itself, so it travels with the document.
 
 <p align="center"><img src="docs/syntax.png" alt="Parts of speech, Style Check strikethroughs and authorship colors" width="760"></p>
 
 ### Preview (⌘R)
 
-A WebKit preview with KaTeX math, footnotes, callouts, tables, task lists and content blocks. Drop a `.css` file into the templates folder for your own look.
+A WebKit preview renders KaTeX math, footnotes, callouts, tables, task lists and content blocks. For your own look, drop a `.css` file into the templates folder.
 
 <p align="center"><img src="docs/preview.png" alt="Rendered preview with a table of contents" width="360"></p>
 
@@ -70,11 +70,11 @@ A WebKit preview with KaTeX math, footnotes, callouts, tables, task lists and co
 
 - Preview templates: drop a `.css` file into `~/Library/Application Support/Writer/Templates`; it appears under View ▸ Template.
 - Style Check: View ▸ Style Check ▸ Edit Custom Patterns, one phrase per line.
-- Authorship is stored in a footer block at the end of each file (`Annotations:` with a SHA-256 of the text). If the text is changed elsewhere the block is ignored.
+- Authorship lives in a footer block at the end of each file (`Annotations:` with a SHA-256 of the text). If you change the text in another editor, Writer ignores the block.
 
 ## Notes
 
-Downloaded zips are ad-hoc signed, so macOS needs System Settings ▸ Privacy & Security ▸ Open Anyway on first launch. The Homebrew cask removes the quarantine flag itself.
+Release zips are ad-hoc signed, so on first launch you need System Settings ▸ Privacy & Security ▸ Open Anyway. The Homebrew cask removes the quarantine flag itself.
 
 ## Contributing
 
