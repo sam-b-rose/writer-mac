@@ -23,7 +23,8 @@ final class WindowController: NSWindowController, NSWindowDelegate, NSToolbarDel
     private var quickSearch: QuickSearchController?
     private var versionBrowser: VersionBrowser?
     private var versionedAt: Date?
-    private var chromeHidden = false
+    private var topHidden = false
+    private var bottomHidden = false
 
     var onClose: ((WindowController) -> Void)?
 
@@ -69,7 +70,7 @@ final class WindowController: NSWindowController, NSWindowDelegate, NSToolbarDel
         toolbar.displayMode = .iconOnly
         toolbar.centeredItemIdentifier = Self.titleItem
         window.toolbar = toolbar
-        split.view.addTrackingArea(NSTrackingArea(rect: .zero, options: [.mouseMoved, .activeInKeyWindow, .inVisibleRect], owner: self))
+        split.view.addTrackingArea(NSTrackingArea(rect: .zero, options: [.mouseMoved, .mouseEnteredAndExited, .activeInKeyWindow, .inVisibleRect], owner: self))
 
         editor.onChange = { [weak self] in self?.documentChanged() }
         editor.onOpenLink = { [weak self] in self?.follow($0) }
@@ -84,6 +85,7 @@ final class WindowController: NSWindowController, NSWindowDelegate, NSToolbarDel
         titleField.onFinish = { [weak self] in self?.window?.makeFirstResponder(self?.editor.textView) }
 
         _ = preview.view
+        setChromeHidden(true)
         let center = NotificationCenter.default
         center.addObserver(self, selector: #selector(settingsChanged(_:)), name: Settings.changed, object: nil)
         center.addObserver(self, selector: #selector(editorScrolled), name: NSView.boundsDidChangeNotification, object: editor.scrollView.contentView)
@@ -320,20 +322,31 @@ final class WindowController: NSWindowController, NSWindowDelegate, NSToolbarDel
         }
     }
 
-    var chromeViews: [NSView] {
-        [window?.standardWindowButton(.closeButton)?.superview, editor.formatBar].compactMap { $0 }
-    }
+    var topChrome: NSView? { window?.standardWindowButton(.closeButton)?.superview }
 
-    func setChromeHidden(_ hidden: Bool) {
-        guard hidden != chromeHidden else { return }
-        chromeHidden = hidden
+    func setChromeHidden(top: Bool, bottom: Bool) {
+        guard top != topHidden || bottom != bottomHidden else { return }
+        topHidden = top
+        bottomHidden = bottom
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = hidden ? 0.5 : 0.2
-            for view in chromeViews { view.animator().alphaValue = hidden ? 0 : 1 }
+            context.duration = 0.2
+            topChrome?.animator().alphaValue = top ? 0 : 1
+            editor.formatBar.animator().alphaValue = bottom ? 0 : 1
         }
     }
 
-    override func mouseMoved(with event: NSEvent) { setChromeHidden(false) }
+    func setChromeHidden(_ hidden: Bool) { setChromeHidden(top: hidden, bottom: hidden) }
+
+    override func mouseMoved(with event: NSEvent) {
+        let bounds = split.view.bounds
+        let point = split.view.convert(event.locationInWindow, from: nil)
+        let editingTitle = titleField.currentEditor() != nil
+        setChromeHidden(top: point.y <= bounds.height - 60 && !editingTitle, bottom: point.y >= 80)
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        if titleField.currentEditor() == nil { setChromeHidden(true) }
+    }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         [Self.libraryToggle, .sidebarTrackingSeparator, .flexibleSpace, Self.titleItem, .flexibleSpace, Self.previewToggle]

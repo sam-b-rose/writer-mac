@@ -110,16 +110,26 @@ final class LibraryViewController: NSViewController, NSOutlineViewDataSource, NS
         scroll.drawsBackground = false
         scroll.translatesAutoresizingMaskIntoConstraints = false
 
+        let addButton = NSButton(image: NSImage(systemSymbolName: "plus", accessibilityDescription: "New")!, target: self, action: #selector(showAddMenu(_:)))
+        addButton.isBordered = false
+        addButton.toolTip = "New Document or Folder"
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+
         container.addSubview(searchField)
         container.addSubview(scroll)
+        container.addSubview(addButton)
         NSLayoutConstraint.activate([
             searchField.topAnchor.constraint(equalTo: container.safeAreaLayoutGuide.topAnchor, constant: 8),
             searchField.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 10),
-            searchField.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
+            searchField.trailingAnchor.constraint(equalTo: addButton.leadingAnchor, constant: -6),
+            addButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
+            addButton.centerYAnchor.constraint(equalTo: searchField.centerYAnchor),
             scroll.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 8),
             scroll.leadingAnchor.constraint(equalTo: container.leadingAnchor),
             scroll.trailingAnchor.constraint(equalTo: container.trailingAnchor),
             scroll.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            addButton.widthAnchor.constraint(equalToConstant: 24),
+            addButton.heightAnchor.constraint(equalToConstant: 24),
         ])
         view = container
         reload()
@@ -338,6 +348,16 @@ final class LibraryViewController: NSViewController, NSOutlineViewDataSource, NS
         add("Rename…", #selector(contextRename))
         add("Show in Finder", #selector(contextReveal))
         add("Move to Trash", #selector(contextTrash))
+    }
+
+    @objc func showAddMenu(_ sender: NSButton) {
+        let menu = NSMenu()
+        for (title, action) in [("New Document", #selector(contextNewFile)), ("New Folder", #selector(contextNewFolder))] {
+            let item = NSMenuItem(title: title, action: action, keyEquivalent: "")
+            item.target = self
+            menu.addItem(item)
+        }
+        menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.height + 4), in: sender)
     }
 
     @objc func removeLocation() {
