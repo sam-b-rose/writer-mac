@@ -51,6 +51,17 @@ final class RoundedBackgroundLayoutManager: NSLayoutManager {
 final class BackgroundView: NSView {
     override var wantsUpdateLayer: Bool { true }
 
+    override init(frame: NSRect) {
+        super.init(frame: frame)
+        NotificationCenter.default.addObserver(self, selector: #selector(settingsChanged(_:)), name: Settings.changed, object: nil)
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    @objc private func settingsChanged(_ notification: Notification) {
+        if notification.object as? String == "appearance" { needsDisplay = true }
+    }
+
     override func updateLayer() {
         layer?.backgroundColor = Theme.background.cgColor
     }
@@ -377,6 +388,9 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
         }
         switch key {
         case "font", "size": restyle()
+        case "appearance":
+            restyle()
+            textView.needsDisplay = true
         case "lineLength": updateInsets()
         case "style":
             rebuildChecker()
@@ -418,11 +432,13 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
         textView.sizeToFit()
     }
 
-    var caretLine: NSRect {
+    var caretLine: NSRect { line(at: textView.selectedRange().location) }
+
+    func line(at location: Int) -> NSRect {
         var rect = NSRect(x: 0, y: 0, width: 0, height: CGFloat(Settings.shared.size) * 1.5)
         guard let layout = textView.layoutManager else { return rect }
         let length = storage.length
-        let location = min(textView.selectedRange().location, length)
+        let location = min(location, length)
         if length > 0 {
             if location == length, layout.extraLineFragmentTextContainer != nil {
                 rect = layout.extraLineFragmentRect
@@ -433,9 +449,10 @@ final class EditorViewController: NSViewController, NSTextStorageDelegate, NSTex
         return rect
     }
 
-    func centerCaret(animated: Bool) {
+    func centerCaret(animated: Bool, at location: Int? = nil) {
         guard Settings.shared.typewriter else { return }
-        scrollEditor(to: caretLine.midY + textView.textContainerOrigin.y - scrollView.contentView.bounds.height / 2, animated: animated)
+        let line = location.map(line(at:)) ?? caretLine
+        scrollEditor(to: line.midY + textView.textContainerOrigin.y - scrollView.contentView.bounds.height / 2, animated: animated)
     }
 
     func jump(to location: Int) {

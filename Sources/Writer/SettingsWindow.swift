@@ -128,7 +128,7 @@ extension SettingsPane {
     static func general() -> SettingsPane {
         let pane = SettingsPane("General", symbol: "gearshape")
         let s = settings
-        pane.row("Appearance:", pane.popup([("Match System", "auto"), ("Light", "light"), ("Dark", "dark")], { s.appearance }, { s.appearance = $0 }))
+        pane.row("Appearance:", pane.popup([("Match System", "auto"), ("Light", "light"), ("Sepia", "sepia"), ("Dark", "dark"), ("Dusk", "dusk")], { s.appearance }, { s.appearance = $0 }))
         pane.row(
             "Preview template:",
             pane.popup({ (Settings.builtInTemplates + Settings.customTemplates).map { ($0, $0) } }, { s.template }, { s.template = $0 }),

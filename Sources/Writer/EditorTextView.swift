@@ -431,7 +431,10 @@ final class EditorTextView: NSTextView {
     override func toggleSmartInsertDelete(_ sender: Any?) { Settings.shared.smartCopyPaste.toggle() }
 
     override func scrollRangeToVisible(_ range: NSRange) {
-        if Settings.shared.typewriter { return }
+        if Settings.shared.typewriter {
+            editor?.centerCaret(animated: true, at: range.location)
+            return
+        }
         super.scrollRangeToVisible(range)
     }
 

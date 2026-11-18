@@ -3,7 +3,7 @@ import CoreText
 import WriterCore
 
 enum Theme {
-    static func color(_ light: UInt32, _ dark: UInt32, alpha: CGFloat = 1) -> NSColor {
+    static func color(_ light: UInt32, _ dark: UInt32, sepia: UInt32? = nil, dusk: UInt32? = nil, alpha: CGFloat = 1) -> NSColor {
         func make(_ hex: UInt32) -> NSColor {
             NSColor(
                 srgbRed: CGFloat((hex >> 16) & 0xFF) / 255,
@@ -12,20 +12,25 @@ enum Theme {
                 alpha: alpha)
         }
         return NSColor(name: nil) { appearance in
-            appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua ? make(dark) : make(light)
+            let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+            switch Settings.shared.appearance {
+            case "sepia" where !isDark: return make(sepia ?? light)
+            case "dusk" where isDark: return make(dusk ?? dark)
+            default: return make(isDark ? dark : light)
+            }
         }
     }
 
-    static let background = color(0xFFFFFF, 0x141414)
-    static let text = color(0x1A1A1A, 0xCCCCCC)
-    static let markup = color(0xB4B4B4, 0x5A5A5A)
-    static let dim = color(0xCFCFCF, 0x404040)
+    static let background = color(0xFFFFFF, 0x141414, sepia: 0xF4ECD8, dusk: 0x1D1D1D)
+    static let text = color(0x1A1A1A, 0xCCCCCC, sepia: 0x433422)
+    static let markup = color(0xB4B4B4, 0x5A5A5A, sepia: 0xB8A98C, dusk: 0x606060)
+    static let dim = color(0xCFCFCF, 0x404040, sepia: 0xD3C6A8, dusk: 0x474747)
     static let caret = color(0x00AAFF, 0x00D3FE)
     static let selection = color(0x00AAFF, 0x00D3FE, alpha: 0.22)
     static let accent = color(0x1D88D4, 0x5DB4F2)
-    static let muted = color(0x8C8C8C, 0x767676)
+    static let muted = color(0x8C8C8C, 0x767676, sepia: 0x8F7F66)
     static let highlight = color(0xFFE066, 0x7A6A1F, alpha: 0.55)
-    static let codeBackground = color(0xF5F5F5, 0x1E1E1E)
+    static let codeBackground = color(0xF5F5F5, 0x1E1E1E, sepia: 0xEBE1C9, dusk: 0x262626)
     static let styleMark = color(0x0096E6, 0x00D3FE, alpha: 0.75)
     static let ai = color(0x7A68D6, 0xA497F2)
     static let reference = color(0x2E9E8F, 0x58C7B8)
@@ -78,8 +83,8 @@ enum Theme {
 
     static func applyAppearance() {
         switch Settings.shared.appearance {
-        case "light": NSApp.appearance = NSAppearance(named: .aqua)
-        case "dark": NSApp.appearance = NSAppearance(named: .darkAqua)
+        case "light", "sepia": NSApp.appearance = NSAppearance(named: .aqua)
+        case "dark", "dusk": NSApp.appearance = NSAppearance(named: .darkAqua)
         default: NSApp.appearance = nil
         }
     }

@@ -235,7 +235,7 @@ enum MainMenu {
                 item("Make Text Smaller", #selector(AppDelegate.changeSize(_:)), "-", tag: -1),
                 item("Make Text Normal Size", #selector(AppDelegate.changeSize(_:)), "0", tag: 0),
             ]),
-            submenu("Appearance", [("Match System", "auto"), ("Light", "light"), ("Dark", "dark")].map {
+            submenu("Appearance", [("Match System", "auto"), ("Light", "light"), ("Sepia", "sepia"), ("Dark", "dark"), ("Dusk", "dusk")].map {
                 item($0.0, #selector(AppDelegate.chooseAppearance(_:)), value: $0.1)
             }),
             separator,

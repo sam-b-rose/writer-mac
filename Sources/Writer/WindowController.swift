@@ -39,6 +39,7 @@ final class WindowController: NSWindowController, NSWindowDelegate, NSToolbarDel
         super.init(window: window)
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
+        applyBackground()
         window.toolbarStyle = .unified
         window.tabbingMode = .preferred
         window.tabbingIdentifier = "writer"
@@ -293,6 +294,7 @@ final class WindowController: NSWindowController, NSWindowDelegate, NSToolbarDel
 
     @objc func settingsChanged(_ notification: Notification) {
         switch notification.object as? String {
+        case "appearance": DispatchQueue.main.async { [weak self] in self?.applyBackground() }
         case "showLibrary": libraryItem.animator().isCollapsed = !Settings.shared.showLibrary
         case "showPreview", "fullPreview":
             applyLayout(animated: true)
@@ -301,6 +303,14 @@ final class WindowController: NSWindowController, NSWindowDelegate, NSToolbarDel
         case "sort", "sortReversed", "smartFolders", "showSmartFolders", "showHashtags", "libraryPath", "libraryFolders": library.reload()
         default: break
         }
+    }
+
+    func applyBackground() {
+        guard let window else { return }
+        window.effectiveAppearance.performAsCurrentDrawingAppearance {
+            window.backgroundColor = NSColor(cgColor: Theme.background.cgColor) ?? Theme.background
+        }
+        window.contentView?.needsDisplay = true
     }
 
     func applyLayout(animated: Bool) {
