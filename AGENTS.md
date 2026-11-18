@@ -29,7 +29,7 @@ build/Writer.app/Contents/MacOS/Writer --snapshot <dir> --library <dir>
 
 ## README screenshots
 
-`docs/*.png` come from the snapshot run: `02-focus`, `03-syntax-style-authors` and `06-preview`, resized with `sips -Z 1600` (`-Z 700` for the preview). `docs/editor.png` is `01-editor` put on a gradient background with `swiftc Scripts/frame-screenshot.swift -o <bin> && <bin> 01-editor.png out.png`, then `sips -Z 1800`.
+`docs/*.png` are the snapshot shots `01-editor`, `02-focus`, `03-syntax-style-authors` and `06-preview`, each put on the macOS Sonoma wallpaper with `swiftc Scripts/frame-screenshot.swift -o <bin> && <bin> <shot>.png "/System/Library/Desktop Pictures/Sonoma.heic" out.png`, then resized with `sips -Z 1800` (`-Z 1600` for focus and syntax, `-Z 900` for the preview).
 
 ## Releasing
 

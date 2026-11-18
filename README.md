@@ -54,7 +54,7 @@ Paste with ⇧⌘V and Writer marks the text as AI-written and colors it. Charac
 
 A WebKit preview renders KaTeX math, footnotes, callouts, tables, task lists and content blocks. For your own look, drop a `.css` file into the templates folder.
 
-<p align="center"><img src="docs/preview.png" alt="Rendered preview with a table of contents" width="360"></p>
+<p align="center"><img src="docs/preview.png" alt="Rendered preview with a table of contents" width="420"></p>
 
 ### And the rest
 
