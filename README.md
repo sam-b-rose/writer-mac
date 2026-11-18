@@ -1,14 +1,23 @@
-# Writer for macOS
+<h1 align="center">Writer</h1>
 
-A native AppKit Markdown writing app modeled on iA Writer. The browser version lives in [writer-web](https://github.com/sam-b-rose/writer-web).
+<p align="center">
+  <b>A Markdown editor that gets out of your way.</b><br>
+  No font picker. No margins to drag. No toolbar to configure.<br>
+  Just you, a blinking caret, and a suspicious number of adverbs.
+</p>
 
-```sh
-./build.sh                      # builds build/Writer.app
-open build/Writer.app
-swift build --build-system native --product corecheck && .build/debug/corecheck
-```
+<p align="center">
+  <img alt="macOS 14+" src="https://img.shields.io/badge/macOS-native-black?logo=apple">
+  <img alt="AppKit" src="https://img.shields.io/badge/AppKit-TextKit%201-blue">
+  <img alt="No Electron" src="https://img.shields.io/badge/Electron-none-success">
+  <a href="https://github.com/sam-b-rose/writer-web"><img alt="Web version" src="https://img.shields.io/badge/also-on%20the%20web-orange"></a>
+</p>
 
-Requires the Xcode Command Line Tools (no Xcode needed). The first launch creates `~/Documents/Writer` with a welcome document; pick another folder with File ▸ Choose Library Folder.
+<p align="center">
+  <img src="docs/editor.png" alt="Writer's editor with the library, outline and hashtag sidebar" width="860">
+</p>
+
+Writer is a native AppKit take on iA Writer: plain text in, calm typography out. It's fast, it's small, and it never asks you to sign in. The browser version lives in [writer-web](https://github.com/sam-b-rose/writer-web).
 
 ## Install
 
@@ -17,14 +26,45 @@ brew tap sam-b-rose/writer-mac https://github.com/sam-b-rose/writer-mac
 brew install --cask sam-b-rose/writer-mac/writer
 ```
 
-## Layout
+Or build it yourself. All you need is the Xcode Command Line Tools (no Xcode, no drama):
 
-- `Sources/WriterCore`: logic with no UI. Markdown scanning and rendering (cmark-gfm), tables, authorship annotations, stats, Style Check, parts of speech (NaturalLanguage), library index.
-- `Sources/Writer`: the AppKit app. Editor (TextKit 1), library sidebar, WebKit preview, menus, export.
-- `Sources/corecheck`: assertions for the core.
-- `Resources`: fonts (iA Writer Mono/Duo/Quattro, SIL OFL), KaTeX (MIT), preview templates.
+```sh
+./build.sh && open build/Writer.app
+```
 
-`build/Writer.app/Contents/MacOS/Writer --snapshot <dir> --library <dir>` runs a hidden self-test that writes screenshots and sample exports.
+The first launch creates `~/Documents/Writer` with a welcome document. Pick another folder with File ▸ Choose Library Folder.
+
+## Tour
+
+### Focus Mode (⌘D)
+
+Everything except the sentence you're writing fades out. Your inner editor can wait its turn. Widen the scope to a paragraph in *View ▸ Focus*, and pin the active line to the middle of the window with Typewriter Mode (⌥⌘T).
+
+<p align="center"><img src="docs/focus.png" alt="Focus Mode dimming everything but the current sentence" width="760"></p>
+
+### Syntax highlighting for your prose
+
+Parts of speech get their own colors, so you can see at a glance that you wrote nine adjectives in a row. Style Check then strikes through fillers, clichés and redundancies, like "at the end of the day" and "basically". It's rude, and it's right.
+
+Paste with ⇧⌘V and the text is marked as AI-written and shown in color. Anything you type into it becomes yours. Authorship is saved in the file itself, so it travels with the document.
+
+<p align="center"><img src="docs/syntax.png" alt="Parts of speech, Style Check strikethroughs and authorship colors" width="760"></p>
+
+### Preview (⌘R)
+
+A WebKit preview with KaTeX math, footnotes, callouts, tables, task lists and content blocks. Drop a `.css` file into the templates folder for your own look.
+
+<p align="center"><img src="docs/preview.png" alt="Rendered preview with a table of contents" width="360"></p>
+
+### And the rest
+
+- Library sidebar with search, hashtags and a live outline
+- Wiki-style links between notes: `[[Shortcuts]]`
+- Tables you can Tab through, sort and align
+- `/file.md` embeds Markdown, images, CSV and code
+- iA Writer Mono, Duo and Quattro bundled in
+- Export to HTML, PDF and Word
+- Light and dark, because of course
 
 ## Customizing
 
@@ -32,19 +72,10 @@ brew install --cask sam-b-rose/writer-mac/writer
 - Style Check: View ▸ Style Check ▸ Edit Custom Patterns, one phrase per line.
 - Authorship is stored in a footer block at the end of each file (`Annotations:` with a SHA-256 of the text). If the text is changed elsewhere the block is ignored.
 
-## Releasing
+## Notes
 
-One-time setup:
+Downloaded zips are ad-hoc signed, so macOS needs System Settings ▸ Privacy & Security ▸ Open Anyway on first launch. The Homebrew cask removes the quarantine flag itself.
 
-1. Run `.build/artifacts/sparkle/Sparkle/bin/generate_keys` and paste the printed public key into `SUPublicEDKey` in `Resources/Info.plist`. The private key stays in your login keychain; export it with `generate_keys -x <file>` and store it as the `SPARKLE_PRIVATE_KEY` GitHub secret for CI.
+## Contributing
 
-Each release:
-
-```sh
-git tag v0.2.0 && git push --tags     # CI builds and publishes, or run locally:
-Scripts/release.sh 0.2.0              # writes build/release/{Writer-0.2.0.zip,appcast.xml,writer.rb}
-```
-
-Upload the zip and `appcast.xml` to the GitHub release (the app checks `releases/latest/download/appcast.xml`) and copy `writer.rb` to `Casks/writer.rb` and commit it. This repo is its own Homebrew tap.
-
-Builds are ad-hoc signed by default, so a downloaded zip needs System Settings ▸ Privacy & Security ▸ Open Anyway on first launch (the Homebrew cask removes the quarantine flag itself). To sign and notarize, set `DEVELOPER_ID` (for example `Developer ID Application: Name (TEAMID)`) and `NOTARY_PROFILE` (a `notarytool store-credentials` profile). In CI add the secrets `DEVELOPER_ID`, `CERTIFICATE_P12`, `CERTIFICATE_PASSWORD`, `NOTARY_APPLE_ID`, `NOTARY_TEAM_ID` and `NOTARY_PASSWORD`.
+See [AGENTS.md](AGENTS.md) for the code layout and dev workflow, and [docs/RELEASING.md](docs/RELEASING.md) for cutting a release.
