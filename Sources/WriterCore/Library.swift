@@ -83,11 +83,12 @@ public final class LibraryIndex {
     public func search(_ query: String, in root: LibraryNode) -> [LibraryNode] {
         let terms = query.lowercased().split(whereSeparator: \.isWhitespace).map(String.init)
         guard !terms.isEmpty else { return [] }
+        let usesTags = terms.contains { $0.hasPrefix("#") && $0.count > 1 }
         return files(in: root).filter { file in
             let text = content(of: file)
             let lower = text.lowercased()
             let name = file.title.lowercased()
-            lazy var tags = SyntaxScanner.hashtags(in: text)
+            let tags = usesTags ? SyntaxScanner.hashtags(in: text) : []
             return terms.allSatisfy { term in
                 term.hasPrefix("#") && term.count > 1 ? tags.contains(String(term.dropFirst())) : name.contains(term) || lower.contains(term)
             }
