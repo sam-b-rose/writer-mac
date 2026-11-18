@@ -1,6 +1,6 @@
 cask "writer" do
-  version "0.1.0"
-  sha256 "935b1e1416fe4e4f861952b3057f0cd7394bc7687b8b821c7baee5f16d460587"
+  version "0.2.0"
+  sha256 "b6b42de4c20aa99c40f9c17c200bfd8004598587ce523fea56131f55bf98ee89"
 
   url "https://github.com/sam-b-rose/writer-mac/releases/download/v#{version}/Writer-#{version}.zip"
   name "Writer"

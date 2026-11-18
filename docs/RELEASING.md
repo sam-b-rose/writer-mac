@@ -11,6 +11,6 @@ git tag v0.2.0 && git push --tags     # CI builds and publishes, or run locally:
 Scripts/release.sh 0.2.0              # writes build/release/{Writer-0.2.0.zip,appcast.xml,writer.rb}
 ```
 
-Upload the zip and `appcast.xml` to the GitHub release (the app checks `releases/latest/download/appcast.xml`) and copy `writer.rb` to `Casks/writer.rb` and commit it. This repo is its own Homebrew tap.
+CI uploads the zip and `appcast.xml` to the GitHub release (the app checks `releases/latest/download/appcast.xml`), then commits `writer.rb` to `Casks/writer.rb` on main. This repo is its own Homebrew tap. When releasing locally, do both by hand.
 
 Builds are ad-hoc signed by default, so a downloaded zip needs System Settings ▸ Privacy & Security ▸ Open Anyway on first launch (the Homebrew cask removes the quarantine flag itself). To sign and notarize, set `DEVELOPER_ID` (for example `Developer ID Application: Name (TEAMID)`) and `NOTARY_PROFILE` (a `notarytool store-credentials` profile). In CI add the secrets `DEVELOPER_ID`, `CERTIFICATE_P12`, `CERTIFICATE_PASSWORD`, `NOTARY_APPLE_ID`, `NOTARY_TEAM_ID` and `NOTARY_PASSWORD`.
