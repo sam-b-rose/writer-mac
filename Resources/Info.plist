@@ -14,7 +14,7 @@
   <key>LSMinimumSystemVersion</key><string>14.0</string>
   <key>NSHighResolutionCapable</key><true/>
   <key>SUFeedURL</key><string>https://github.com/sam-b-rose/writer-mac/releases/latest/download/appcast.xml</string>
-  <key>SUPublicEDKey</key><string></string>
+  <key>SUPublicEDKey</key><string>i3p0XHYy5nfXp8akQgUzhTVZ8cFTyzJQggb/d1hB+E4=</string>
   <key>SUEnableAutomaticChecks</key><true/>
   <key>NSPrincipalClass</key><string>NSApplication</string>
   <key>NSSupportsAutomaticTermination</key><false/>
