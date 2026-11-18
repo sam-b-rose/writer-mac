@@ -4,7 +4,7 @@ import WriterCore
 final class Settings {
     static let shared = Settings()
     static let changed = Notification.Name("WriterSettingsChanged")
-    static let defaultSize = 21.0
+    static let defaultSize = 22.0
 
     var store = UserDefaults.standard
 

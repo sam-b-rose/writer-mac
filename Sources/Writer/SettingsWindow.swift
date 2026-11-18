@@ -159,9 +159,12 @@ extension SettingsPane {
         pane.row("Focus scope:", pane.popup([("Sentence", "sentence"), ("Paragraph", "paragraph")], { s.focusScope }, { s.focusScope = $0 }))
         pane.row("Scrolling:", pane.checkbox("Typewriter mode", { s.typewriter }, { s.typewriter = $0 }))
         pane.rowsOfCheckboxes("Syntax:", PartOfSpeech.allCases.map { kind in
-            pane.checkbox(kind.title, { s.syntax.contains(kind) }, { on in
+            let checkbox = pane.checkbox(kind.title, { s.syntax.contains(kind) }, { on in
                 if on { s.syntax.insert(kind) } else { s.syntax.remove(kind) }
             })
+            checkbox.attributedTitle = NSAttributedString(
+                string: kind.title, attributes: [.foregroundColor: Theme.partsOfSpeech[kind] ?? .labelColor])
+            return checkbox
         })
         pane.rowsOfCheckboxes("Style check:", StyleCategory.allCases.map { category in
             pane.checkbox(category.title, { s.style.contains(category) }, { on in

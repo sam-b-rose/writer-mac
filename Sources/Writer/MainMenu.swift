@@ -204,7 +204,12 @@ enum MainMenu {
             item("Typewriter Mode", #selector(AppDelegate.toggleTypewriter(_:)), "t", option),
             separator,
             submenu("Syntax", [item("Show Syntax", #selector(AppDelegate.toggleAllSyntax(_:)), "h", shift), separator]
-                + PartOfSpeech.allCases.map { item($0.title, #selector(AppDelegate.toggleSyntax(_:)), value: $0.rawValue) }),
+                + PartOfSpeech.allCases.map { kind in
+                    let entry = item(kind.title, #selector(AppDelegate.toggleSyntax(_:)), value: kind.rawValue)
+                    entry.attributedTitle = NSAttributedString(
+                        string: kind.title, attributes: [.foregroundColor: Theme.partsOfSpeech[kind] ?? .labelColor])
+                    return entry
+                }),
             submenu("Style Check", [item("Enable Style Check", #selector(AppDelegate.toggleAllStyle(_:)), "k", control), separator]
                 + StyleCategory.allCases.map { item($0.title, #selector(AppDelegate.toggleStyle(_:)), value: $0.rawValue) }
                 + [separator, item("Edit Custom Patterns…", #selector(AppDelegate.editCustomPatterns(_:)))]),
