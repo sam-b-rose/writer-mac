@@ -165,6 +165,21 @@ final class EditorTextView: NSTextView {
         edit(box, content.substring(with: box) == " " ? "x" : " ", select: caret)
     }
 
+    override func insertText(_ string: Any, replacementRange: NSRange) {
+        if Settings.shared.sentenceLines, string as? String == " ", selectedRange().length == 0, endsSentence {
+            super.insertText("\n", replacementRange: replacementRange)
+            return
+        }
+        super.insertText(string, replacementRange: replacementRange)
+    }
+
+    var endsSentence: Bool {
+        let caret = selectedRange().location
+        guard caret > 0, editor?.isCode(NSRange(location: caret - 1, length: 1)) != true else { return false }
+        let line = content.lineRange(for: NSRange(location: caret, length: 0))
+        return SentenceBreak.shouldBreak(after: content.substring(with: NSRange(location: line.location, length: caret - line.location)))
+    }
+
     override func insertNewline(_ sender: Any?) {
         let range = selectedRange()
         let text = content

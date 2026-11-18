@@ -192,6 +192,7 @@ enum MainMenu {
                 item("Paragraph", #selector(AppDelegate.setFocusScope(_:)), value: "paragraph"),
             ]),
             item("Typewriter Mode", #selector(AppDelegate.toggleTypewriter(_:)), "t", option),
+            item("One Sentence Per Line", #selector(AppDelegate.toggleSentenceLines(_:))),
             separator,
             submenu("Syntax", [item("Show Syntax", #selector(AppDelegate.toggleAllSyntax(_:)), "h", shift), separator]
                 + PartOfSpeech.allCases.map { kind in

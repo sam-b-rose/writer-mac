@@ -32,6 +32,11 @@ final class Settings {
         set { write("typewriter", newValue) }
     }
 
+    var sentenceLines: Bool {
+        get { read("sentenceLines", false) }
+        set { write("sentenceLines", newValue) }
+    }
+
     var syntax: Set<PartOfSpeech> {
         get { Set(read("syntax", [String]()).compactMap(PartOfSpeech.init(rawValue:))) }
         set { write("syntax", newValue.map(\.rawValue)) }

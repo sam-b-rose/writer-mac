@@ -10,6 +10,8 @@ Press **⌘D** to switch on Focus Mode. Everything except the sentence you are w
 
 Typewriter Mode (**⌥⌘T**) keeps the line you are typing in the middle of the window.
 
+One Sentence Per Line (*Writing* menu) starts a new line after each sentence you finish. It is a soft line break, so the paragraph stays one paragraph.
+
 ## Syntax and Style Check
 
 Turn on parts of speech in *View ▸ Syntax*. The beautiful old house quietly stood on the hill, and its windows glowed warmly.

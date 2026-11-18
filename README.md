@@ -38,7 +38,7 @@ The first launch creates `~/Documents/Writer` with a welcome document. Pick anot
 
 ### Focus Mode (⌘D)
 
-Everything except the sentence you're writing fades out, so the urge to reread the last paragraph has nothing to grab onto. Widen the scope to a paragraph in *View ▸ Focus*; Typewriter Mode (⌥⌘T) pins the active line to the middle of the window.
+Everything except the sentence you're writing fades out, so the urge to reread the last paragraph has nothing to grab onto. Widen the scope to a paragraph in *View ▸ Focus*; Typewriter Mode (⌥⌘T) pins the active line to the middle of the window. One Sentence Per Line puts each finished sentence on its own line without starting a new paragraph, so you notice how long your sentences run.
 
 <p align="center"><img src="docs/focus.png" alt="Focus Mode dimming everything but the current sentence" width="760"></p>
 

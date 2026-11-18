@@ -158,6 +158,7 @@ extension SettingsPane {
         pane.row("Line length limit:", pane.popup([64, 72, 80].map { ("\($0) characters", $0) }, { s.lineLength }, { s.lineLength = $0 }))
         pane.row("Focus scope:", pane.popup([("Sentence", "sentence"), ("Paragraph", "paragraph")], { s.focusScope }, { s.focusScope = $0 }))
         pane.row("Scrolling:", pane.checkbox("Typewriter mode", { s.typewriter }, { s.typewriter = $0 }))
+        pane.row("Writing:", pane.checkbox("One sentence per line", { s.sentenceLines }, { s.sentenceLines = $0 }))
         pane.rowsOfCheckboxes("Syntax:", PartOfSpeech.allCases.map { kind in
             let checkbox = pane.checkbox(kind.title, { s.syntax.contains(kind) }, { on in
                 if on { s.syntax.insert(kind) } else { s.syntax.remove(kind) }

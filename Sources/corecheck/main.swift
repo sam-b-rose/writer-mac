@@ -35,6 +35,10 @@ let text = "First one. Second one here. Third.\n\nNext paragraph." as NSString
 check(text.substring(with: TextScopes.sentence(in: text, at: 14)).hasPrefix("Second one here."), "sentence scope '\(text.substring(with: TextScopes.sentence(in: text, at: 14)))'")
 check(text.substring(with: TextScopes.paragraph(in: text, at: 3)) == "First one. Second one here. Third.\n", "paragraph scope")
 
+for (line, expected) in [("Hello.", true), ("Wait!\"", true), ("Really?", true), ("See Dr.", false), ("Like e.g.", false), ("Meet J.", false), ("Wait...", false), ("- item.", false), ("1. item.", false), ("# Title.", false), ("| a.", false), ("No end", false), ("It was in 2020.", true)] {
+    check(SentenceBreak.shouldBreak(after: line) == expected, "sentence break '\(line)'")
+}
+
 let scan = SyntaxScanner.scan("# Head\n\nSome **bold** and *it* with `co*de*` #tag [[Wiki]] [a](http://x_y_z)\n\n```\n**not**\n```\n- item\n" as NSString)
 func has(_ kind: SpanKind, _ s: String) -> Bool {
     scan.spans.contains { $0.kind == kind && ("# Head\n\nSome **bold** and *it* with `co*de*` #tag [[Wiki]] [a](http://x_y_z)\n\n```\n**not**\n```\n- item\n" as NSString).substring(with: $0.range) == s }

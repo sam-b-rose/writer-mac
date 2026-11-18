@@ -165,6 +165,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
     }
     @objc func toggleFocus(_ sender: Any?) { Settings.shared.focus.toggle() }
     @objc func toggleTypewriter(_ sender: Any?) { Settings.shared.typewriter.toggle() }
+    @objc func toggleSentenceLines(_ sender: Any?) { Settings.shared.sentenceLines.toggle() }
     @objc func toggleAuthors(_ sender: Any?) { Settings.shared.showAuthors.toggle() }
     @objc func toggleHardBreaks(_ sender: Any?) { Settings.shared.hardBreaks.toggle() }
     @objc func toggleSmartPunctuation(_ sender: Any?) { Settings.shared.smartPunctuation.toggle() }
@@ -245,6 +246,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         case #selector(setPreviewLayout(_:)): on = settings.fullPreview == (value == "full")
         case #selector(toggleFocus(_:)): on = settings.focus
         case #selector(toggleTypewriter(_:)): on = settings.typewriter
+        case #selector(toggleSentenceLines(_:)): on = settings.sentenceLines
         case #selector(toggleAuthors(_:)): on = settings.showAuthors
         case #selector(toggleHardBreaks(_:)): on = settings.hardBreaks
         case #selector(toggleSmartPunctuation(_:)): on = settings.smartPunctuation
