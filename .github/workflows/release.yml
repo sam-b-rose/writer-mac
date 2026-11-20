@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: macos-15
+    runs-on: macos-26
     env:
       DEVELOPER_ID: ${{ secrets.DEVELOPER_ID }}
     steps:
