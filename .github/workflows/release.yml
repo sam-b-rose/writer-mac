@@ -20,6 +20,7 @@ jobs:
         run: |
           XCODE=$(ls -d /Applications/Xcode_26*.app | sort -V | tail -1)
           sudo xcode-select -s "$XCODE"
+          echo "DEVELOPER_DIR=$XCODE/Contents/Developer" >> "$GITHUB_ENV"
           xcodebuild -version
       - name: Import signing certificate
         if: env.DEVELOPER_ID != ''
