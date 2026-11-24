@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/editor.png" alt="Writer's editor with the library, outline and hashtag sidebar" width="860">
+  <img src="docs/writer-demo.gif" alt="Writing in Writer" width="640">
 </p>
 
 Writer is a native AppKit take on iA Writer: plain text, calm typography, focus mode. It reads and writes ordinary Markdown files in whatever folder you want. There is also a browser version – [writer-web](https://github.com/sam-b-rose/writer-web).
